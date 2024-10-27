@@ -2,16 +2,14 @@ package Management_Exc;
 
 public class Employee extends Person {
     private double salary;
+    private static final double MINIMUM_SALARY = 30000;
 
-    /**
-     * TODO implementation
-     * @param name the name of the employee
-     * @param age the age of the employee
-     * @param salary the salary of the employee
-     * @throws IllegalArgumentException when salary does not reach minimum salary of 30,000
-     */
     public Employee(String name, int age, double salary)  {
         super(name, age);
+        if (salary < MINIMUM_SALARY) {
+            throw new IllegalArgumentException("Salary must be at least " + MINIMUM_SALARY);
+        }
+        this.salary = salary;
     }
 
     public double getSalary() {
@@ -19,6 +17,9 @@ public class Employee extends Person {
     }
 
     public void setSalary(double salary) {
+        if (salary < MINIMUM_SALARY) {
+            throw new IllegalArgumentException("Salary must be at least " + MINIMUM_SALARY);
+        }
         this.salary = salary;
     }
 
@@ -29,6 +30,7 @@ public class Employee extends Person {
 
     @Override
     public void performTask() {
+
         System.out.println(getName() + " is working");
     }
 }

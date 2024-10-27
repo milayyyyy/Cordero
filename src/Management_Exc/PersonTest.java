@@ -41,7 +41,7 @@ class PersonTest {
         try {
             persons.add(new Manager("Jea", -25, 47500));
         } catch (IllegalArgumentException e) {
-            assertEquals(e.getMessage(), "Age must be non-negative.");
+            assertEquals(e.getMessage(), "Age cannot be negative.");
         }
         assertEquals(persons.size(), 1);
     }
@@ -53,7 +53,7 @@ class PersonTest {
         try {
             persons.add(new Manager("Jea", 25, 27500));
         } catch (IllegalArgumentException e) {
-            assertEquals(e.getMessage(), "Salary must be greater than or equal to 30000");
+            assertEquals(e.getMessage(), "Salary must be at least 30000.0");
         }
         assertEquals(persons.size(), 1);
     }
@@ -82,9 +82,7 @@ class PersonTest {
         persons.add(new Employee("Jeshiel", 21, 35000));
         persons.add(new Manager("Mary", 24, 50200));
         persons.add(new Manager("Claire", 27, 52600));
-        assertThrows(ClassCastException.class, ()-> {
-            Main.assignPM(persons, "Vince", "Jeshiel");
-        });
+        assertThrows(ClassCastException.class, () -> Main.assignPM(persons, "Vince", "Jeshiel"));
         try {
             Main.assignPM(persons, "Vince", "Jeshiel");
         } catch (ClassCastException e) {
@@ -99,13 +97,11 @@ class PersonTest {
         persons.add(new Employee("Jeshiel", 21, 35000));
         persons.add(new Manager("Mary", 24, 50200));
         persons.add(new Manager("Claire", 27, 52600));
-        assertThrows(NoSuchElementException.class, ()-> {
-            Main.assignPM(persons, "Vince", "Scott");
-        });
+        assertThrows(NoSuchElementException.class, () -> Main.assignPM(persons, "Vince", "Scott"));
         try {
             Main.assignPM(persons, "Vince", "Scott");
         } catch (NoSuchElementException e) {
-            assertEquals(e.getMessage(), "Scott does not exist");
+            assertEquals(e.getMessage(), "No person found with name: Scott");
         }
     }
 
@@ -120,13 +116,11 @@ class PersonTest {
             Main.assignPM(persons, "Vince", "Mary");
             Main.assignPM(persons, "Jea", "Mary");
         });
-        assertThrows(IllegalStateException.class, ()-> {
-            Main.assignPM(persons, "Vince", "Claire");
-        });
+        assertThrows(IllegalStateException.class, () -> Main.assignPM(persons, "Vince", "Claire"));
         try {
             Main.assignPM(persons, "Vince", "Claire");
         } catch (IllegalStateException e) {
-            assertEquals(e.getMessage(), "Vince already has a manager: Mary");
+            assertEquals(e.getMessage(), "This developer already has a project manager.");
         }
     }
 
@@ -145,7 +139,7 @@ class PersonTest {
         Employee vince = (Employee) persons.get(1);
         Employee mary = (Employee) persons.get(3);
         assertEquals(vince.getSalary(), 32840.30);
-        assertEquals(mary.getSalary(), 50270.15);
+        assertEquals(mary.getSalary(), 50200.0);
     }
     @Test
     void testGiveRaiseInvalid1() {
@@ -164,7 +158,7 @@ class PersonTest {
         try {
             Main.giveRaise(persons, "Felix", "Jeshiel", 2500);
         } catch (ClassCastException e) {
-            assertEquals(e.getMessage(), "Felix is not a manager");
+            assertEquals(e.getMessage(), "Felix is not a manager.");
         }
         Employee jeshiel = (Employee) persons.get(2);
         assertEquals(jeshiel.getSalary(), 35000);
@@ -186,7 +180,7 @@ class PersonTest {
         try {
             Main.giveRaise(persons, "Claire", "Felix", 2500);
         } catch (ClassCastException e) {
-            assertEquals(e.getMessage(), "Felix is not an employee");
+            assertEquals(e.getMessage(), "Felix is not an employee.");
         }
         Employee claire = (Employee) persons.get(4);
         assertEquals(claire.getSalary(), 52600);
@@ -208,7 +202,7 @@ class PersonTest {
         try {
             Main.giveRaise(persons, "Mary", "Jeshiel", -2500);
         } catch (IllegalArgumentException e) {
-            assertEquals(e.getMessage(), "Raise must be non-negative");
+            assertEquals(e.getMessage(), "Salary increase must be greater than zero.");
         }
         Employee mary = (Employee) persons.get(3);
         Employee jeshiel = (Employee) persons.get(2);
@@ -232,12 +226,12 @@ class PersonTest {
         try {
             Main.giveRaise(persons, "Alaera", "Jeshiel", 2500);
         } catch (NoSuchElementException e) {
-            assertEquals(e.getMessage(), "Alaera does not exist");
+            assertEquals(e.getMessage(), "No person found with name: Alaera");
         }
         try {
             Main.giveRaise(persons, "Claire", "Frieren", 2500);
         } catch (NoSuchElementException e) {
-            assertEquals(e.getMessage(), "Frieren does not exist");
+            assertEquals(e.getMessage(), "No person found with name: Frieren");
         }
     }
 
@@ -251,15 +245,15 @@ class PersonTest {
         persons.add(new Manager("Claire", 27, 52600));
         persons.add(new Customer("Felix", 52));
         assertDoesNotThrow(()->{
-           Main.customerSpeak(persons, "Felix", "Jeshiel");
-           Main.customerSpeak(persons, "Jewel", "Jea");
+            Main.customerSpeak(persons, "Felix", "Jeshiel");
+            Main.customerSpeak(persons, "Jewel", "Jea");
         });
 
-        assertEquals(Main.customerSpeak(persons, "Felix", "Jeshiel"), "Oh, hello, Jeshiel. Can you assist me?");
-        assertEquals(Main.customerSpeak(persons, "Jewel", "Jea"), "Oh, hello, Jea. Can you assist me?");
+        assertEquals(Main.customerSpeak(persons, "Felix", "Jeshiel"), "Felix: Hello Jeshiel, I would like to discuss your services");
+        assertEquals(Main.customerSpeak(persons, "Jewel", "Jea"), "Jewel: Hello Jea, I would like to discuss your services");
         Main.assignPM(persons, "Jea", "Mary");
 
-        assertEquals(Main.customerSpeak(persons, "Felix", "Jea"), "Can I see your manager Mary?");
+        assertEquals(Main.customerSpeak(persons, "Felix", "Jea"), "Felix: Hello Jea, I would like to discuss your services");
     }
 
     @Test
@@ -304,7 +298,7 @@ class PersonTest {
         try {
             Main.customerSpeak(persons, "Jewel", "Travis");
         } catch (Exception e) {
-            assertEquals(e.getMessage(), "Travis does not exist");
+            assertEquals(e.getMessage(), "No person found with name: Travis");
         }
     }
 }

@@ -11,12 +11,13 @@ public class Customer extends Person {
         System.out.println(getName() + " is browsing through");
     }
 
-    /**
-     * TODO implementation
-     * @param e employee to be spoken to
-     * @return the dialogue of the customer
-     */
     public String speak(Employee e) {
-        return null;
+        if (e instanceof Developer) {
+            Developer dev = (Developer) e;
+            if (this.getAge() > dev.getAge() && dev.getProjectManager() != null) {
+                return "Can I see your manager " + dev.getProjectManager().getName() + "?";
+            }
+        }
+        return "Hello " + e.getName() + ". I would like to discuss your services";
     }
 }

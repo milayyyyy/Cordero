@@ -5,43 +5,60 @@ import java.util.NoSuchElementException;
 
 public class Main {
 
-    /**
-     * TODO this implementation
-     * @param persons the list of persons
-     * @param manager the manager to give the salary
-     * @param employee the employee to receive the raise
-     * @param salary the salary increase to be given
-     * @throws ClassCastException when manager or employee is not a manager or employee
-     * @throws IllegalArgumentException when salary is invalid
-     * @throws NoSuchElementException when given manager or employee does not exist in the list of persons
-     */
     public static void giveRaise(List<Person> persons, String manager, String employee, double salary)  {
+        Person mgr = findPersonByName(persons, manager);
+        Person emp = findPersonByName(persons, employee);
 
+        if (!(mgr instanceof Manager)) {
+            throw new ClassCastException(manager + " is not a manager.");
+        }
+        if (!(emp instanceof Employee)) {
+            throw new ClassCastException(employee + " is not an employee.");
+        }
+        if (salary <= 0) {
+            throw new IllegalArgumentException("Salary increase must be greater than zero.");
+        }
+
+        ((Manager) mgr).giveRaise((Employee) emp, salary);
     }
 
-    /**
-     * TODO this implementation
-     * @param persons the list of persons
-     * @param developer the developer to be assigned
-     * @param manager the manager assigned to the dev
-     * @throws ClassCastException when manager or developer is not a manager or employee
-     * @throws NoSuchElementException when given manager or developer does not exist in the list of persons
-     * @throws IllegalStateException when developer already has a manager
-     */
+
     public static void assignPM(List<Person> persons, String developer, String manager) {
+        Person dev = findPersonByName(persons, developer);
+        Person mgr = findPersonByName(persons, manager);
 
+        if (!(dev instanceof Developer)) {
+            throw new ClassCastException(developer + " is not a developer");
+        }
+        if (!(mgr instanceof Manager)) {
+            throw new ClassCastException(manager + " is not a manager");
+        }
+
+        ((Developer) dev).setProjectManager((Manager) mgr);
     }
 
-    /**
-     * TODO this implementation
-     * @param persons the list of persons
-     * @param customer the customer to speak to the employee
-     * @param employee the employee to be spoken to
-     * @return the dialogue of the customer to the employee
-     * @throws ClassCastException when given customer or employee is not what they are
-     * @throws NoSuchElementException when given customer or employee is not in the list of persons
-     */
+
     public static String customerSpeak(List<Person> persons, String customer, String employee) {
-        return null;
+        Person cust = findPersonByName(persons, customer);
+        Person emp = findPersonByName(persons, employee);
+
+        if (!(cust instanceof Customer)) {
+            throw new ClassCastException(customer + " is not a customer");
+        }
+        if (!(emp instanceof Employee)) {
+            throw new ClassCastException(employee + " is not an employee");
+        }
+
+        // Assuming the customer speaks a standard greeting; modify as needed.
+        return cust.getName() + ": Hello " + emp.getName() + ", I would like to discuss your services";
+    }
+
+    private static Person findPersonByName(List<Person> persons, String name) {
+        for (Person person : persons) {
+            if (person.getName().equals(name)) {
+                return person;
+            }
+        }
+        throw new NoSuchElementException("No person found with name: " + name);
     }
 }
